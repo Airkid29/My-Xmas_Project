@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Piège de Noël 🎅</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #001f3f;
+      color: white;
+      text-align: center;
+    }
+
+    .page {
+      display: none;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    .active {
+      display: flex;
+    }
+
+    button {
+      background-color: #ff0000;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 18px;
+      border-radius: 5px;
+      cursor: pointer;
+      box-shadow: 0 4px #cc0000;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #ff7f00;
+    }
+
+    #joyeux-noel-text {
+      font-size: 4rem;
+      color: white;
+      font-family: 'Cookie', cursive;
+      text-shadow: 0 0 20px #ff0000, 0 0 30px #ff0000, 0 0 40px #ff7f00;
+      animation: glow 1.5s ease-in-out infinite alternate;
+      opacity: 1;
+    }
+
+    @keyframes glow {
+      from {
+        text-shadow: 0 0 20px #ff0000, 0 0 30px #ff0000, 0 0 40px #ff7f00;
+      }
+      to {
+        text-shadow: 0 0 30px #ff7f00, 0 0 40px #ff0000, 0 0 50px #ff0000;
+      }
+    }
+
+    .snowflake {
+      position: absolute;
+      top: -10px;
+      color: white;
+      font-size: 1em;
+      user-select: none;
+      z-index: 1000;
+      animation: snowflakes 10s linear infinite;
+    }
+
+    @keyframes snowflakes {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Page 1 -->
+  <div id="page1" class="page active">
+    <h1>Félicitations, vous venez de gagner un iPhone 16 Pro Max!</h1>
+    <button onclick="goToPage(2)">Cliquez ici pour le récupérer</button>
+  </div>
+
+  <!-- Page 2 -->
+  <div id="page2" class="page">
+    <h1>Inscrivez-vous pour récupérer votre cadeau</h1>
+    <form id="user-form">
+      <input type="text" id="prenom" placeholder="Votre prénom" required>
+      <input type="email" id="email" placeholder="Votre email" required>
+      <button type="submit">Soumettre</button>
+    </form>
+  </div>
+
+  <!-- Page 3 -->
+  <div id="page3" class="page">
+    <h1 id="prank-text">T'es un pigeon toi, il n'y a pas d'iPhone 16 Pro Max ici!</h1>
+    <h1 id="joyeux-noel-text" style="display: none;">Joyeux Noël, <span id="user-name"></span>!</h1>
+  </div>
+
+  <!-- Confettis et Flocons -->
+  <div id="confetti-container"></div>
+
+  <script>
+    const form = document.getElementById('user-form');
+    let currentPage = 1;
+
+    // Change de page
+    function goToPage(page) {
+      document.getElementById(`page${currentPage}`).classList.remove('active');
+      document.getElementById(`page${page}`).classList.add('active');
+      currentPage = page;
+
+      if (page === 3) {
+        showPrankMessage();
+      }
+    }
+
+    // Soumission du formulaire
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const prenom = document.getElementById('prenom').value;
+
+      goToPage(3);
+
+      // Mettre à jour le prénom dans "Joyeux Noël"
+      const userNameSpan = document.getElementById('user-name');
+      userNameSpan.textContent = prenom;
+
+      // Affiche "Joyeux Noël" avec prénom après les confettis
+      setTimeout(() => {
+        document.getElementById('joyeux-noel-text').style.display = 'block';
+        showSnowflakes();
+      }, 3000); // Délai après les confettis
+    });
+
+    // Affiche le message de prank
+    function showPrankMessage() {
+      const prankText = document.getElementById('prank-text');
+      prankText.style.display = 'block';
+
+      // Ajoute les confettis
+      showConfetti();
+    }
+
+    // Génère les confettis
+    function showConfetti() {
+      const confettiContainer = document.getElementById('confetti-container');
+      for (let i = 0; i < 100; i++) {
+        const confetti = document.createElement('div');
+        confetti.classList.add('confetti');
+        confetti.style.position = 'absolute';
+        confetti.style.top = `${Math.random() * 100}vh`;
+        confetti.style.left = `${Math.random() * 100}vw`;
+        confetti.style.width = '5px';
+        confetti.style.height = '10px';
+        confetti.style.backgroundColor =
+          `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
+        confetti.style.animation = 'fall 2s linear forwards';
+
+        confettiContainer.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 3000); // Confettis disparaissent
+      }
+    }
+
+    // Ajoute les flocons
+    function showSnowflakes() {
+      for (let i = 0; i < 50; i++) {
+        const snowflake = document.createElement('div');
+        snowflake.classList.add('snowflake');
+        snowflake.textContent = '❄';
+        snowflake.style.left = `${Math.random() * 100}vw`;
+        snowflake.style.fontSize = `${Math.random() * 10 + 10}px`;
+        snowflake.style.animationDuration = `${Math.random() * 5 + 5}s`;
+
+        document.body.appendChild(snowflake);
+        setTimeout(() => snowflake.remove(), 10000);
+      }
+    }
+  </script>
+</body>
+</html>
